@@ -1,3 +1,5 @@
+import matplotlib
+import matplotlib.pylab as plt
 import sys
 sys.path.append('waveglow/')
 import numpy as np
