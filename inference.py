@@ -43,7 +43,8 @@ sequence = torch.autograd.Variable(
 mel_outputs, mel_outputs_postnet, _, alignments = model.inference(sequence)
 with torch.no_grad():
     audio = waveglow.infer(mel_outputs_postnet, sigma=0.666)
-print(audio.shape)
+print(torch.max(audio))
+print(torch.min(audio))
 audio_path = "./audio/audio.wav"
 write(audio_path, hparams.sampling_rate, audio.cpu().numpy())
 
