@@ -39,6 +39,8 @@ sequence = np.array(text_to_sequence(text, ['english_cleaners']))[None, :]
 sequence = torch.autograd.Variable(
     torch.from_numpy(sequence)).cuda().long()
 
+print(sequence)
+
 # Decode text input
 mel_outputs, mel_outputs_postnet, _, alignments = model.inference(sequence)
 with torch.no_grad():
