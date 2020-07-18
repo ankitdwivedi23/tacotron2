@@ -47,6 +47,7 @@ print(sequence)
 
 # Decode text input
 mel_outputs, mel_outputs_postnet, _, alignments = model.inference(sequence)
+print(mel_outputs)
 with torch.no_grad():
     audio = waveglow.infer(mel_outputs_postnet, sigma=0.666)
 print(torch.max(audio))
