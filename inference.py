@@ -25,7 +25,7 @@ _ = model.cuda().eval().half()
 
 # Load WaveGlow for mel2audio synthesis and denoiser
 
-waveglow_path = './models/waveglow_256channels_universal_v5.pt'
+waveglow_path = './models/waveglow_256channels.pt'
 waveglow = torch.load(waveglow_path)['model']
 waveglow.cuda().eval().half()
 for k in waveglow.convinv:
