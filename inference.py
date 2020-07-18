@@ -14,8 +14,12 @@ from scipy.io.wavfile import write
 
 # Setup hparams
 
+print("Setting up params...")
+
 hparams = create_hparams()
 hparams.sampling_rate = 22050
+
+print("Done.")
 
 # Load model from checkpoint
 checkpoint_path = "./models/tacotron2_statedict.pt"
