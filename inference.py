@@ -12,9 +12,16 @@ from text import text_to_sequence
 from denoiser import Denoiser
 from scipy.io.wavfile import write
 
+def plot_data(data, figsize=(16, 4), filepath):
+    fig, axes = plt.subplots(1, len(data), figsize=figsize)
+    for i in range(len(data)):
+        axes[i].imshow(data[i], aspect='auto', origin='bottom', 
+                       interpolation='none')
+    fig.savefig(filepath)
+
 # Setup hparams
 
-print("Setting up params...")
+print("Setting up hyperparams...")
 
 hparams = create_hparams()
 hparams.sampling_rate = 22050
@@ -49,12 +56,16 @@ print(sequence)
 mel_outputs, mel_outputs_postnet, _, alignments = model.inference(sequence)
 print(mel_outputs)
 print(mel_outputs_postnet)
+plot_data((mel_outputs.float().data.cpu().numpy()[0],
+           mel_outputs_postnet.float().data.cpu().numpy()[0],
+           alignments.float().data.cpu().numpy()[0].T), './melplots/plot.png')
 
 with torch.no_grad():
     audio = waveglow.infer(mel_outputs_postnet, sigma=0.666)
 print(torch.max(audio))
 print(torch.min(audio))
 audio_path = "./audio/audio.wav"
+
 write(audio_path, hparams.sampling_rate, audio.cpu().numpy().T)
 
 
