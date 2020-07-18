@@ -54,20 +54,16 @@ sequence = torch.autograd.Variable(
 
 print(sequence)
 
-# Decode text input
+# Decode text input and plot results
 mel_outputs, mel_outputs_postnet, _, alignments = model.inference(sequence)
-print(mel_outputs)
-print(mel_outputs_postnet)
 plot_data((mel_outputs.float().data.cpu().numpy()[0],
            mel_outputs_postnet.float().data.cpu().numpy()[0],
            alignments.float().data.cpu().numpy()[0].T), './melplots/plot.png')
 
 with torch.no_grad():
     audio = waveglow.infer(mel_outputs_postnet, sigma=0.666)
-print(torch.max(audio))
-print(torch.min(audio))
+
 audio_path = "./audio/audio.wav"
 
-write(audio_path, hparams.sampling_rate, audio.cpu().numpy().T)
-
+write(audio_path, hparams.sampling_rate, audio[0].cpu().numpy())
 
