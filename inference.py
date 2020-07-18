@@ -63,5 +63,5 @@ with torch.no_grad():
 
 audio_path = "./audio/audio.wav"
 
-write(audio_path, hparams.sampling_rate, audio[0].cpu().numpy())
+write(audio_path, hparams.sampling_rate, audio[0].cpu().numpy().T)
 
