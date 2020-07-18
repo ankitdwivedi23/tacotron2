@@ -38,7 +38,7 @@ _ = model.cuda().eval().half()
 
 # Load WaveGlow for mel2audio synthesis and denoiser
 
-waveglow_path = './models/waveglow_256channels.pt'
+waveglow_path = './models/waveglow_256channels_universal_v5.pt'
 waveglow = torch.load(waveglow_path)['model']
 waveglow.cuda().eval().half()
 for k in waveglow.convinv:
@@ -51,8 +51,6 @@ text = "Waveglow is really awesome!"
 sequence = np.array(text_to_sequence(text, ['english_cleaners']))[None, :]
 sequence = torch.autograd.Variable(
     torch.from_numpy(sequence)).cuda().long()
-
-print(sequence)
 
 # Decode text input and plot results
 mel_outputs, mel_outputs_postnet, _, alignments = model.inference(sequence)
