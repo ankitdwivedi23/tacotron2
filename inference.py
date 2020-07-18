@@ -14,7 +14,7 @@ from text import text_to_sequence
 from denoiser import Denoiser
 from scipy.io.wavfile import write
 
-def plot_data(data, figsize=(16, 4), filepath):
+def plot_data(data, filepath, figsize=(16, 4)):
     fig, axes = plt.subplots(1, len(data), figsize=figsize)
     for i in range(len(data)):
         axes[i].imshow(data[i], aspect='auto', origin='bottom', 
