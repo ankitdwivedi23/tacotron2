@@ -34,7 +34,7 @@ print("Done.")
 checkpoint_path = "./models/tacotron2_statedict.pt"
 model = load_model(hparams)
 model.load_state_dict(torch.load(checkpoint_path)['state_dict'])
-_ = model.cuda().eval()
+_ = model.cuda().eval().half()
 #tacotron2 = torch.hub.load('nvidia/DeepLearningExamples:torchhub', 'nvidia_tacotron2')
 #tacotron2 = tacotron2.to('cuda')
 #tacotron2.eval()
@@ -52,7 +52,7 @@ waveglow = waveglow.to('cuda')
 waveglow.eval()
 '''
 
-waveglow.cuda().eval()
+waveglow.cuda().eval().half()
 #for k in waveglow.convinv:
 #    k.float()
 #denoiser = Denoiser(waveglow)
