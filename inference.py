@@ -31,22 +31,30 @@ hparams.sampling_rate = 22050
 print("Done.")
 
 # Load model from checkpoint
-checkpoint_path = "./models/tacotron2_statedict.pt"
-model = load_model(hparams)
-model.load_state_dict(torch.load(checkpoint_path)['state_dict'])
-_ = model.cuda().eval().half()
+#checkpoint_path = "./models/tacotron2_statedict.pt"
+#model = load_model(hparams)
+#model.load_state_dict(torch.load(checkpoint_path)['state_dict'])
+#_ = model.cuda().eval().half()
+tacotron2 = torch.hub.load('nvidia/DeepLearningExamples:torchhub', 'nvidia_tacotron2')
+tacotron2 = tacotron2.to('cuda')
+tacotron2.eval()
+
 
 # Load WaveGlow for mel2audio synthesis and denoiser
 
-waveglow_path = './models/waveglow_256channels_universal_v5.pt'
-waveglow = torch.load(waveglow_path)['model']
-waveglow.cuda().eval().half()
-for k in waveglow.convinv:
-    k.float()
-denoiser = Denoiser(waveglow)
+#waveglow_path = './models/waveglow_256channels_universal_v5.pt'
+#waveglow = torch.load(waveglow_path)['model']
+waveglow = torch.hub.load('nvidia/DeepLearningExamples:torchhub', 'nvidia_waveglow')
+waveglow = waveglow.remove_weightnorm(waveglow)
+waveglow = waveglow.to('cuda')
+waveglow.eval()
+#waveglow.cuda().eval().half()
+#for k in waveglow.convinv:
+#    k.float()
+#denoiser = Denoiser(waveglow)
 
+'''
 # Prepare input text
-
 text = "Waveglow is really awesome!"
 sequence = np.array(text_to_sequence(text, ['english_cleaners']))[None, :]
 sequence = torch.autograd.Variable(
@@ -63,6 +71,20 @@ with torch.no_grad():
 
 audio_path = "./audio/audio.wav"
 
-print(audio[0].shape[0])
-write(audio_path, hparams.sampling_rate, audio[0].cpu().numpy().reshape(audio[0].shape[0], 1))
+write(audio_path, hparams.sampling_rate, audio[0].cpu().numpy())
+'''
 
+text = "hello world, I missed you"
+# preprocessing
+sequence = np.array(tacotron2.text_to_sequence(text, ['english_cleaners']))[None, :]
+sequence = torch.from_numpy(sequence).to(device='cuda', dtype=torch.int64)
+
+# run the models
+with torch.no_grad():
+    _, mel, _, _ = tacotron2.infer(sequence)
+    audio = waveglow.infer(mel)
+audio_numpy = audio[0].data.cpu().numpy()
+rate = 22050
+
+audio_path = "./audio/audio.wav"
+write(audio_path, rate, audio_numpy)
