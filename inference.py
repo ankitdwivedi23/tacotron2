@@ -31,13 +31,13 @@ hparams.sampling_rate = 22050
 print("Done.")
 
 # Load model from checkpoint
-#checkpoint_path = "./models/tacotron2_statedict.pt"
-#model = load_model(hparams)
-#model.load_state_dict(torch.load(checkpoint_path)['state_dict'])
-#_ = model.cuda().eval().half()
-tacotron2 = torch.hub.load('nvidia/DeepLearningExamples:torchhub', 'nvidia_tacotron2')
-tacotron2 = tacotron2.to('cuda')
-tacotron2.eval()
+checkpoint_path = "./models/tacotron2_statedict.pt"
+model = load_model(hparams)
+model.load_state_dict(torch.load(checkpoint_path)['state_dict'])
+_ = model.cuda().eval().half()
+#tacotron2 = torch.hub.load('nvidia/DeepLearningExamples:torchhub', 'nvidia_tacotron2')
+#tacotron2 = tacotron2.to('cuda')
+#tacotron2.eval()
 
 
 # Load WaveGlow for mel2audio synthesis and denoiser
@@ -53,7 +53,7 @@ waveglow.eval()
 #    k.float()
 #denoiser = Denoiser(waveglow)
 
-'''
+
 # Prepare input text
 text = "Waveglow is really awesome!"
 sequence = np.array(text_to_sequence(text, ['english_cleaners']))[None, :]
@@ -66,14 +66,15 @@ plot_data((mel_outputs.float().data.cpu().numpy()[0],
            mel_outputs_postnet.float().data.cpu().numpy()[0],
            alignments.float().data.cpu().numpy()[0].T), './melplots/plot.png')
 
+
 with torch.no_grad():
     audio = waveglow.infer(mel_outputs_postnet, sigma=0.666)
 
-audio_path = "./audio/audio.wav"
+audio_path = "./audio/audio_custom.wav"
 
 write(audio_path, hparams.sampling_rate, audio[0].cpu().numpy())
-'''
 
+'''
 text = "Waveglow is really awesome!"
 # preprocessing
 sequence = np.array(tacotron2.text_to_sequence(text, ['english_cleaners']))[None, :]
@@ -83,8 +84,10 @@ sequence = torch.from_numpy(sequence).to(device='cuda', dtype=torch.int64)
 with torch.no_grad():
     _, mel, _, _ = tacotron2.infer(sequence)
     audio = waveglow.infer(mel)
+
 audio_numpy = audio[0].data.cpu().numpy()
 rate = 22050
 
 audio_path = "./audio/audio.wav"
 write(audio_path, rate, audio_numpy)
+'''
