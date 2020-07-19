@@ -74,7 +74,7 @@ audio_path = "./audio/audio.wav"
 write(audio_path, hparams.sampling_rate, audio[0].cpu().numpy())
 '''
 
-text = "hello world, I missed you"
+text = "Waveglow is really awesome!"
 # preprocessing
 sequence = np.array(tacotron2.text_to_sequence(text, ['english_cleaners']))[None, :]
 sequence = torch.from_numpy(sequence).to(device='cuda', dtype=torch.int64)
