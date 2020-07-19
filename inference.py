@@ -34,7 +34,7 @@ print("Done.")
 checkpoint_path = "./models/tacotron2_statedict.pt"
 model = load_model(hparams)
 model.load_state_dict(torch.load(checkpoint_path)['state_dict'])
-_ = model.cuda().eval().half()
+_ = model.cuda().eval()
 #tacotron2 = torch.hub.load('nvidia/DeepLearningExamples:torchhub', 'nvidia_tacotron2')
 #tacotron2 = tacotron2.to('cuda')
 #tacotron2.eval()
