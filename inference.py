@@ -42,13 +42,17 @@ _ = model.cuda().eval()
 
 # Load WaveGlow for mel2audio synthesis and denoiser
 
-#waveglow_path = './models/waveglow_256channels_universal_v5.pt'
-#waveglow = torch.load(waveglow_path)['model']
+waveglow_path = './models/waveglow_256channels_universal_v5.pt'
+waveglow = torch.load(waveglow_path)['model']
+
+'''
 waveglow = torch.hub.load('nvidia/DeepLearningExamples:torchhub', 'nvidia_waveglow')
 waveglow = waveglow.remove_weightnorm(waveglow)
 waveglow = waveglow.to('cuda')
 waveglow.eval()
-#waveglow.cuda().eval().half()
+'''
+
+waveglow.cuda().eval()
 #for k in waveglow.convinv:
 #    k.float()
 #denoiser = Denoiser(waveglow)
@@ -70,7 +74,7 @@ plot_data((mel_outputs.float().data.cpu().numpy()[0],
 with torch.no_grad():
     audio = waveglow.infer(mel_outputs_postnet, sigma=0.666)
 
-audio_path = "./audio/audio_custom.wav"
+audio_path = "./audio/audio_custom_custom.wav"
 
 write(audio_path, hparams.sampling_rate, audio[0].cpu().numpy())
 
