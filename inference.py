@@ -52,7 +52,7 @@ waveglow = waveglow.to('cuda')
 waveglow.eval()
 '''
 
-waveglow.cuda().eval().half()
+waveglow.cuda().eval().half()   
 #for k in waveglow.convinv:
 #    k.float()
 #denoiser = Denoiser(waveglow)
@@ -74,7 +74,7 @@ plot_data((mel_outputs.float().data.cpu().numpy()[0],
 with torch.no_grad():
     audio = waveglow.infer(mel_outputs_postnet, sigma=0.666)
 
-audio_path = "./audio/audio_custom_custom.wav"
+audio_path = "./audio/audio_custom_custom_halfprecision.wav"
 
 write(audio_path, hparams.sampling_rate, audio[0].cpu().numpy())
 
