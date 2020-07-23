@@ -39,11 +39,10 @@ model.cuda().eval()
 
 waveglow_path = './models/waveglow_256channels_universal_v5.pt'
 waveglow = torch.load(waveglow_path)['model']
-waveglow.cuda().eval().half()   
+waveglow.cuda().eval()
 for k in waveglow.convinv:
     k.float()
 denoiser = Denoiser(waveglow)
-
 
 # Prepare input text
 text = "Waveglow is really awesome!"
