@@ -1,4 +1,5 @@
 import numpy as np
+import torch
 from scipy.io.wavfile import write
 
 tacotron2 = torch.hub.load('nvidia/DeepLearningExamples:torchhub', 'nvidia_tacotron2')
