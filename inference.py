@@ -63,6 +63,9 @@ with torch.no_grad():
 audio_path = "./audio/audio.wav"
 write(audio_path, hparams.sampling_rate, audio[0].cpu().numpy())
 
+# Remove WaveGlow bias
+'''
 audio_denoised = denoiser(audio, strength=0.01)[:, 0]
 audio_denoised_path = "./audio/audio_denoised.wav"
 write(audio_denoised_path, hparams.sampling_rate, audio_denoised.cpu().numpy())
+'''
