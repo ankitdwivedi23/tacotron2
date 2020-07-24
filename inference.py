@@ -30,7 +30,7 @@ print("Done.")
 
 # Load model from checkpoint
 #checkpoint_path = "./models/tacotron2_statedict.pt"
-checkpoint_path = "./outdir/checkpoint_4000"
+checkpoint_path = "./outdir/checkpoint_5000"
 model = load_model(hparams)
 model.load_state_dict(torch.load(checkpoint_path)['state_dict'])
 model.cuda().eval()
