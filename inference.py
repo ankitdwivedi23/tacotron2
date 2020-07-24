@@ -29,7 +29,8 @@ hparams.sampling_rate = 22050
 print("Done.")
 
 # Load model from checkpoint
-checkpoint_path = "./models/tacotron2_statedict.pt"
+#checkpoint_path = "./models/tacotron2_statedict.pt"
+checkpoint_path = "./outdir/checkpoint_1000"
 model = load_model(hparams)
 model.load_state_dict(torch.load(checkpoint_path)['state_dict'])
 model.cuda().eval()
@@ -45,8 +46,8 @@ for k in waveglow.convinv:
 denoiser = Denoiser(waveglow)
 
 # Prepare input text
-text = "Waveglow is really awesome!"
-sequence = np.array(text_to_sequence(text, ['english_cleaners']))[None, :]
+text = "आपके हिन्दी पसन्द करने पर खुशी हुई |"
+sequence = np.array(text_to_sequence(text, ['basic_cleaners']))[None, :]
 sequence = torch.autograd.Variable(
     torch.from_numpy(sequence)).cuda().long()
 
@@ -54,13 +55,13 @@ sequence = torch.autograd.Variable(
 mel_outputs, mel_outputs_postnet, _, alignments = model.inference(sequence)
 plot_data((mel_outputs.float().data.cpu().numpy()[0],
            mel_outputs_postnet.float().data.cpu().numpy()[0],
-           alignments.float().data.cpu().numpy()[0].T), './melplots/plot.png')
+           alignments.float().data.cpu().numpy()[0].T), './melplots/plot_hindi.png')
 
 
 with torch.no_grad():
     audio = waveglow.infer(mel_outputs_postnet, sigma=0.666)
 
-audio_path = "./audio/audio.wav"
+audio_path = "./audio/audio_hindi.wav"
 write(audio_path, hparams.sampling_rate, audio[0].cpu().numpy())
 
 # Remove WaveGlow bias
